@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support Resolution Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="brand-mark">GW</span>
+        <div>
+          <strong>Support Resolution Desk</strong>
+          <span>Clean-room rebuild concept</span>
+        </div>
+      </div>
+      <div class="topbar-meta">
+        <div class="meta-chip" id="modeChip">Demo dataset</div>
+        <button class="ghost-btn" id="demoBtn" type="button">Run demo</button>
+        <button class="ghost-btn" id="analyzeBtn" type="button">Run analysis</button>
+      </div>
+    </header>
+
+    <main class="app">
+      <section class="hero-card">
+        <div class="hero-copy">
+          <span class="eyebrow">Applied AI Workflow</span>
+          <h1>Operator triage that turns messy tickets into one clear next action.</h1>
+          <p>A short workflow: review the case, classify intent, score urgency, reuse guidance, then route the handoff.</p>
+        </div>
+        <div class="hero-flow" id="heroStats"></div>
+      </section>
+
+      <nav class="view-nav card" id="viewNav"></nav>
+
+      <section class="workspace" data-pane="desk">
+        <aside class="queue-panel card">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">Queue</span>
+              <h2>Open cases</h2>
+            </div>
+            <div class="count-badge" id="queueCount">0</div>
+          </div>
+          <div class="filter-row" id="filterRow"></div>
+          <div class="queue-list" id="queueList"></div>
+        </aside>
+
+        <section class="desk-main">
+          <div class="case-panel card">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Case view</span>
+                <h2 id="caseTitle">Select a case</h2>
+              </div>
+              <div class="detail-meta" id="caseMeta"></div>
+            </div>
+
+            <div class="case-summary" id="caseSummary"></div>
+
+            <div class="case-layout">
+              <div class="message-stack" id="messageStack"></div>
+              <aside class="decision-inline card-soft">
+                <div class="panel-head compact">
+                  <div>
+                    <span class="eyebrow">Decision rail</span>
+                    <h3>Analysis</h3>
+                  </div>
+                  <span class="status-dot" id="analysisState">Ready</span>
+                </div>
+                <div class="signal-grid" id="signalGrid"></div>
+                <div class="decision-actions">
+                  <button class="ghost-btn compact-btn primary-action" id="runSelectedDemoBtn" type="button">Run selected demo</button>
+                  <button class="ghost-btn compact-btn" id="rerunSelectedBtn" type="button">Re-run selected case</button>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div class="card decision-card">
+            <div class="panel-head compact">
+              <div>
+                <span class="eyebrow">Pipeline output</span>
+                <h2>Step summary</h2>
+              </div>
+            </div>
+            <div class="desk-lower-grid">
+              <div class="stage-list" id="stageList"></div>
+              <div id="kbMatch" class="kb-match"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="support-grid" data-pane="workflow">
+        <div class="card support-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Workflow map</span>
+              <h2>Decision sequence</h2>
+            </div>
+          </div>
+          <div class="flow-map" id="flowMap"></div>
+        </div>
+
+        <div class="card support-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Action plan</span>
+              <h2>Operator handoff</h2>
+            </div>
+          </div>
+          <div class="handoff-list" id="handoffList"></div>
+        </div>
+      </section>
+
+      <section class="dataset-pane" data-pane="store">
+        <div class="card lab-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Ticket store</span>
+              <h2>Tracked ticket inventory</h2>
+            </div>
+            <span class="status-dot" id="storeCount">0 tickets</span>
+          </div>
+          <div class="dataset-table-shell">
+            <table class="dataset-table store-table">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Account</th>
+                  <th>Subject</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Owner</th>
+                  <th>Received</th>
+                  <th>Dataset</th>
+                  <th>View</th>
+                </tr>
+              </thead>
+              <tbody id="storeList"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-grid" data-pane="pipeline">
+        <div class="card lab-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Pipeline lab</span>
+              <h2>Run a fresh case</h2>
+            </div>
+            <span class="status-dot" id="labState">Idle</span>
+          </div>
+          <div class="lab-form">
+            <div class="lab-field-grid">
+              <label class="field">
+                <span>Account</span>
+                <input id="labAccount" type="text" placeholder="Northgate Mall">
+              </label>
+              <label class="field">
+                <span>Subject</span>
+                <input id="labSubject" type="text" placeholder="Camera offline - not connecting to NVR">
+              </label>
+            </div>
+            <label class="field">
+              <span>Latest customer message</span>
+              <textarea id="labBody" rows="6" placeholder="Paste the latest case update here"></textarea>
+            </label>
+            <div class="sample-strip" id="sampleStrip"></div>
+            <div class="lab-actions">
+              <button class="ghost-btn primary-btn" id="runLabBtn" type="button">Run pipeline</button>
+            </div>
+          </div>
+          <div class="pipeline-results" id="pipelineResults"></div>
+        </div>
+      </section>
+
+      <section class="lab-grid" data-pane="rules">
+        <div class="card lab-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Decision rules</span>
+              <h2>Editable operator logic</h2>
+            </div>
+          </div>
+          <div class="rules-stack">
+            <label class="field">
+              <span>High-priority cues</span>
+              <textarea id="highPriorityRules" rows="4"></textarea>
+            </label>
+            <label class="field">
+              <span>Recording / outage cues</span>
+              <textarea id="billingRules" rows="4"></textarea>
+            </label>
+            <label class="field">
+              <span>Vision / config cues</span>
+              <textarea id="workflowRules" rows="4"></textarea>
+            </label>
+            <div class="route-matrix" id="routeMatrix"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-grid" data-pane="knowledge">
+        <div class="card lab-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Knowledge pack</span>
+              <h2>Reusable answer paths</h2>
+            </div>
+          </div>
+          <div class="library-list" id="kbLibrary"></div>
+        </div>
+
+        <div class="card lab-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Dataset snapshot</span>
+              <h2>Queue coverage</h2>
+            </div>
+          </div>
+          <div class="library-list" id="datasetSummary"></div>
+        </div>
+      </section>
+
+      <section class="dataset-pane" data-pane="dataset">
+        <div class="card lab-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Dataset</span>
+              <h2>Saved dataset entries</h2>
+            </div>
+            <div class="dataset-head-actions">
+              <span class="status-dot" id="datasetCount">0 entries</span>
+              <button class="ghost-btn plus-btn" id="openDatasetCreateBtn" type="button" aria-label="Add dataset entry">+</button>
+            </div>
+          </div>
+          <div class="dataset-table-shell">
+            <table class="dataset-table">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Account</th>
+                  <th>Subject</th>
+                  <th>Priority</th>
+                  <th>Queue</th>
+                  <th>Saved time</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="datasetList"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-grid" data-pane="ops">
+        <div class="card lab-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Notifications</span>
+              <h2>Handoff and escalation surfaces</h2>
+            </div>
+          </div>
+          <div class="notify-list" id="notifyList"></div>
+        </div>
+
+        <div class="card lab-card">
+          <div class="panel-head compact">
+            <div>
+              <span class="eyebrow">Runtime trace</span>
+              <h2>API + fallback path</h2>
+            </div>
+          </div>
+          <div class="notify-list" id="runtimeTrace"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-shell" id="datasetModal" hidden>
+    <div class="modal-backdrop" data-close-modal="true"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="datasetModalTitle">
+      <div class="panel-head compact">
+        <div>
+          <span class="eyebrow">Dataset detail</span>
+          <h2 id="datasetModalTitle">Saved case detail</h2>
+        </div>
+        <button class="ghost-btn compact-btn" id="closeDatasetModalBtn" type="button">Close</button>
+      </div>
+      <div id="datasetModalContent"></div>
+    </div>
+  </div>
+
+  <div class="modal-shell" id="storeModal" hidden>
+    <div class="modal-backdrop" data-close-store-modal="true"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="storeModalTitle">
+      <div class="panel-head compact">
+        <div>
+          <span class="eyebrow">Ticket store detail</span>
+          <h2 id="storeModalTitle">Tracked ticket</h2>
+        </div>
+        <div class="modal-shell-actions">
+          <button class="ghost-btn compact-btn primary-btn" id="storeModalEditBtn" type="button" hidden>Edit</button>
+          <button class="ghost-btn compact-btn" id="closeStoreModalBtn" type="button">Close</button>
+        </div>
+      </div>
+      <div id="storeModalContent"></div>
+    </div>
+  </div>
+
+  <div class="modal-shell" id="datasetCreateModal" hidden>
+    <div class="modal-backdrop" data-close-create-modal="true"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="datasetCreateModalTitle">
+      <div class="panel-head compact">
+        <div>
+          <span class="eyebrow">Add entry</span>
+          <h2 id="datasetCreateModalTitle">Build a reusable case sample</h2>
+        </div>
+        <button class="ghost-btn compact-btn" id="closeDatasetCreateModalBtn" type="button">Close</button>
+      </div>
+      <div class="lab-form">
+        <div class="lab-field-grid">
+          <label class="field">
+            <span>Account</span>
+            <input id="datasetAccount" type="text" placeholder="Vertex Systems">
+          </label>
+          <label class="field">
+            <span>Subject</span>
+            <input id="datasetSubject" type="text" placeholder="New ticket subject">
+          </label>
+        </div>
+        <div class="lab-field-grid">
+          <label class="field">
+            <span>Priority</span>
+            <select id="datasetPriority" class="route-input">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Queue</span>
+            <input id="datasetQueue" type="text" placeholder="Enterprise">
+          </label>
+        </div>
+        <label class="field">
+          <span>Case body</span>
+          <textarea id="datasetBody" rows="6" placeholder="Write the full latest customer message"></textarea>
+        </label>
+        <div class="lab-actions">
+          <button class="ghost-btn primary-btn" id="saveDatasetBtn" type="button">Save to dataset</button>
+          <button class="ghost-btn compact-btn" id="saveSelectedBtn" type="button">Clone selected case</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
