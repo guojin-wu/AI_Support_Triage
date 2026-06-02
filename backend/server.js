@@ -1,8 +1,7 @@
 const path = require('path');
-const requireDep = require('./require-dep');
-requireDep('dotenv').config();
-const express = requireDep('express');
-const cors = requireDep('cors');
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
 
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
